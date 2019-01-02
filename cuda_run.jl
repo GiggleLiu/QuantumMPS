@@ -1,0 +1,11 @@
+include("CuChem.jl")
+device!(CuDevice(0))
+chem = get_model(Val(:goodqn4); nbit=21, VER=4, V=5, B=4096)
+params = readdlm("data/chem_goodqn4_params_N21_V5.dat")
+dispatch!(chem.circuit, params)
+@time energy_exact(chem)
+@time energy(chem)
+include("sampled_energy.jl")
+
+#run_corr(chem; VER=:goodqn4)
+#run_train(chem, heisenberg_ground_state(nbit-1); VER=:goodqn4)
