@@ -14,5 +14,5 @@ _local/
 **/*.ipynb_checkpoints
 **/**/*.ipynb_checkpoints
 *.out
-data/*.dat
+data/_*.dat
 __pycache__/

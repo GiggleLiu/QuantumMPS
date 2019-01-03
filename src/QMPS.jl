@@ -11,8 +11,8 @@ using KrylovKit
 
 include("Adam.jl")
 include("Core.jl")
-include("hamiltonians.jl")
+include("heisenberg.jl")
 include("gradient.jl")
-include("training.jl")
+include("correlation.jl")
 include("models/models.jl")
 end

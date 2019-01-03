@@ -1,26 +1,26 @@
-function goodqn_unit(ver::Val{:su2}, nbit::Int, i::Int, j::Int)
-    put(nbit, (i,j)=>rot(SWAP, 0.0))
+function su2_unit(::Type{T}, nbit::Int, i::Int, j::Int) where T
+    put(nbit, (i,j)=>rot(SWAPGate{T}(), 0.0))
 end
 
-function su2_circuit(nbit_virtual::Int, nlayer::Int, nrepeat::Int)
+function su2_circuit(::Type{T}, nbit_virtual::Int, nlayer::Int, nrepeat::Int) where T
     circuit = sequence()
     nbit_used = 1 + nbit_virtual
     for i=1:nrepeat
-        unit = chain(nbit_used)
+        unit = chain(T, nbit_used)
         if i==1
             for j=2:2:nbit_virtual
-                push!(unit, singlet_block(nbit_used, j, j+1))
+                push!(unit, singlet_block(T, nbit_used, j, j+1))
             end
         end
         if i%2 == 1
-            push!(unit, singlet_block(nbit_used, 1, nbit_used))
+            push!(unit, singlet_block(T, nbit_used, 1, nbit_used))
         else
-            push!(unit, swap(nbit_used, 1, nbit_used))
+            push!(unit, swap(nbit_used, T, 1, nbit_used))   # fix swap parameter order!
         end
         for j=1:nlayer
             nring = nbit_virtual
             nring <= 1 && continue
-            ops = [goodqn_unit(Val(:su2), nbit_used, i, j) for (i,j) in pair_ring(nring)]
+            ops = [su2_unit(T, nbit_used, i, j) for (i,j) in pair_ring(nring)]
             push!(unit, chain(nbit_used, ops))
         end
         push!(circuit, unit)
@@ -28,23 +28,15 @@ function su2_circuit(nbit_virtual::Int, nlayer::Int, nrepeat::Int)
     dispatch!(circuit, :random)
 end
 
-function singlet_block(nbit::Int, i::Int, j::Int)
+function singlet_block(::Type{T}, nbit::Int, i::Int, j::Int) where T
     unit = chain(nbit)
-    push!(unit, put(nbit, i=>chain(X, H)))
-    push!(unit, control(nbit, -i, j=>X))
+    push!(unit, put(nbit, i=>chain(XGate{T}(), HGate{T}())))
+    push!(unit, control(nbit, -i, j=>XGate{T}()))
 end
 
-function chem_sample(ver::Val{:su2}, nbit::Int=21; nbit_virtual::Int=5, nbatch=4096, nlayer=5, input_state=[0 for i=1:nbit])
-    nrepeat = (nbit - nbit_virtual)
-    c = su2_circuit(nbit_virtual, nlayer, nrepeat) |> autodiff(:QC)
-
-    ei = eigen!(mat(heisenberg_term) |> Matrix)
-    chem = TNChem(1, nbit_virtual, c, zero_state(nbit_virtual+1, nbatch), ei, input_state, 1)
-end
-
-function model(::Val{:su2}; nbit=21, VER=4, V=5, B=4096)
-    chem = chem_sample(Val(:su2), nbit, nbatch=B, nbit_virtual=V)
-    println("Number of parameters is ", chem.circuit |> nparameters)
-    #chem |> cu
+function model(::Val{:su2}, ::Type{T}; nbit, V, B=4096, nlayer=5) where T
+    nrepeat = nbit - V + 1
+    c = su2_circuit(T, V, nlayer, nrepeat) |> autodiff(:QC)
+    chem = QuantumMPS(1, V, 1, c, zero_state(T, V+1, B), zeros(Int, nbit+1))
     chem
 end

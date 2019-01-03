@@ -1,26 +1,26 @@
-export TNChemOptimizer, gradients_exact
+export QMPSOptimizer, gradients_exact
 
-struct TNChemOptimizer
-    chem::TNChem
+struct QMPSOptimizer
+    chem::QuantumMPS
     optimizer
     diff_blocks
     params::Vector
-    TNChemOptimizer(chem::TNChem, optimizer) = new(chem, optimizer, collect(chem.circuit, AbstractDiff), parameters(chem.circuit))
+    QMPSOptimizer(chem::QuantumMPS, optimizer) = new(chem, optimizer, collect(chem.circuit, AbstractDiff), parameters(chem.circuit))
 end
 
 import Yao: gradient
 # TODO: setiparameters! throw number of parameters mismatch error!
-function gradient(chem::TNChem, db::AbstractDiff)
+function gradient(chem::QuantumMPS, db::AbstractDiff)
     db.block.theta += π/2
-    epos = energy(chem)
+    epos = heisenberg_energy(chem)
     db.block.theta -= π
-    eneg = energy(chem)
+    eneg = heisenberg_energy(chem)
     db.block.theta += π/2
     real(epos-eneg)/2
 end
 
 import Base: iterate
-function iterate(qo::TNChemOptimizer, state::Int=1)
+function iterate(qo::QMPSOptimizer, state::Int=1)
     # initialize the parameters
     grad = gradient.(Ref(qo.chem), qo.diff_blocks)
     update!(qo.params, grad, qo.optimizer)
