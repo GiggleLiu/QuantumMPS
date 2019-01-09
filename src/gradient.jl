@@ -2,19 +2,20 @@ export QMPSOptimizer, gradients_exact
 
 struct QMPSOptimizer
     chem::QuantumMPS
+    model::AbstractModel
     optimizer
     diff_blocks
     params::Vector
-    QMPSOptimizer(chem::QuantumMPS, optimizer) = new(chem, optimizer, collect(chem.circuit, AbstractDiff), parameters(chem.circuit))
+    QMPSOptimizer(chem::QuantumMPS, model::AbstractModel, optimizer) = new(chem, model, optimizer, collect(chem.circuit, AbstractDiff), parameters(chem.circuit))
 end
 
 import Yao: gradient
 # TODO: setiparameters! throw number of parameters mismatch error!
-function gradient(chem::QuantumMPS, db::AbstractDiff)
+function gradient(chem::QuantumMPS, db::AbstractDiff, model::AbstractModel)
     db.block.theta += π/2
-    epos = heisenberg_energy(chem)
+    epos = energy(chem, model)
     db.block.theta -= π
-    eneg = heisenberg_energy(chem)
+    eneg = energy(chem, model)
     db.block.theta += π/2
     real(epos-eneg)/2
 end
@@ -22,7 +23,7 @@ end
 import Base: iterate
 function iterate(qo::QMPSOptimizer, state::Int=1)
     # initialize the parameters
-    grad = gradient.(Ref(qo.chem), qo.diff_blocks)
+    grad = gradient.(Ref(qo.chem), qo.diff_blocks, Ref(qo.model))
     update!(qo.params, grad, qo.optimizer)
     dispatch!(qo.chem.circuit, qo.params)
     (grad, state+1)

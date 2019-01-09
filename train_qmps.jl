@@ -3,16 +3,17 @@ using Yao
 using QMPS
 using DelimitedFiles
 
-function run_train(chem, ground_state; VER, niter=500)
-    qo = QMPSOptimizer(chem, Adam(lr=0.1))
+function run_train(chem, model; VER, niter=500)
+    qo = QMPSOptimizer(chem, model, Adam(lr=0.1))
+    gs = ground_state(model)
 
     history = Float64[]
     fidelities = Float64[]
     nbit = nbit_simulated(chem)
     V = chem.nbit_virtual
     for (k, p) in enumerate(qo)
-        curr_loss = heisenberg_energy(chem)/nbit
-        fid = fidelity_exact(chem, ground_state)[]
+        curr_loss = energy(chem, model)/nbit
+        fid = fidelity_exact(chem, gs)[]
         push!(history, curr_loss)
         push!(fidelities, fid)
         println("step = $k, energy/site = $curr_loss, fidelity = $(fid)")
@@ -38,5 +39,4 @@ USE_CUDA && (chem = chem |> cu)
 println("Number of parameters is ", chem.circuit |> nparameters)
 
 #chem = model(Val(VER), ComplexF32; nbit=nbit, V=4, B=4096)
-@time heisenberg_energy(chem)
-run_train(chem, heisenberg_ground_state(nbit); VER=VER)
+run_train(chem, Heisenberg(nbit; periodic=false); VER=VER)

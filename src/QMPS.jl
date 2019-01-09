@@ -14,5 +14,5 @@ include("Core.jl")
 include("heisenberg.jl")
 include("gradient.jl")
 include("correlation.jl")
-include("models/models.jl")
+include("ansatz/ansatz.jl")
 end
