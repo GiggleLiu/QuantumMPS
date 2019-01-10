@@ -17,6 +17,7 @@ function run_train(chem, model; VER, niter=500)
         push!(history, curr_loss)
         push!(fidelities, fid)
         println("step = $k, energy/site = $curr_loss, fidelity = $(fid)")
+        flush(stdout)
         k >= niter && break
     end
 
@@ -28,15 +29,18 @@ function run_train(chem, model; VER, niter=500)
     end
 end
 
-const nbit = 20
+const nbit = 16
 const VER = :su2
 const USE_CUDA = true
 USE_CUDA && include("CuChem.jl")
 
 # load predefined model
-chem = model(Val(VER), ComplexF32; nbit=nbit, V=5, B=4096)
+V = 7
+pairs = pair_ring(V)
+chem = model(Val(VER), ComplexF32; nbit=nbit, V=V, B=4096, pairs=pairs)
 USE_CUDA && (chem = chem |> cu)
 println("Number of parameters is ", chem.circuit |> nparameters)
+flush(stdout)
 
 #chem = model(Val(VER), ComplexF32; nbit=nbit, V=4, B=4096)
-run_train(chem, Heisenberg(nbit; periodic=false); VER=VER)
+run_train(chem, Heisenberg(4, 4; periodic=false); VER=VER)

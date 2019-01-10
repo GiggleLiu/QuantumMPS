@@ -2,7 +2,7 @@ function su2_unit(::Type{T}, nbit::Int, i::Int, j::Int) where T
     put(nbit, (i,j)=>rot(SWAPGate{T}(), 0.0))
 end
 
-function su2_circuit(::Type{T}, nbit_virtual::Int, nlayer::Int, nrepeat::Int) where T
+function su2_circuit(::Type{T}, nbit_virtual::Int, nlayer::Int, nrepeat::Int, pairs::Vector) where T
     circuit = sequence()
     nbit_used = 1 + nbit_virtual
     for i=1:nrepeat
@@ -20,7 +20,7 @@ function su2_circuit(::Type{T}, nbit_virtual::Int, nlayer::Int, nrepeat::Int) wh
         for j=1:nlayer
             nring = nbit_virtual
             nring <= 1 && continue
-            ops = [su2_unit(T, nbit_used, i, j) for (i,j) in pair_ring(nring)]
+            ops = [su2_unit(T, nbit_used, i, j) for (i,j) in pairs]
             push!(unit, chain(nbit_used, ops))
         end
         push!(circuit, unit)
@@ -34,9 +34,9 @@ function singlet_block(::Type{T}, nbit::Int, i::Int, j::Int) where T
     push!(unit, control(nbit, -i, j=>XGate{T}()))
 end
 
-function model(::Val{:su2}, ::Type{T}; nbit, V, B=4096, nlayer=5) where T
+function model(::Val{:su2}, ::Type{T}; nbit, V, B=4096, nlayer=5, pairs) where T
     nrepeat = nbit - V + 1
-    c = su2_circuit(T, V, nlayer, nrepeat) |> autodiff(:QC)
+    c = su2_circuit(T, V, nlayer, nrepeat, pairs) |> autodiff(:QC)
     chem = QuantumMPS(1, V, 1, c, zero_state(T, V+1, B), zeros(Int, nbit+1))
     chem
 end

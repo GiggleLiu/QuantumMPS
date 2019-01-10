@@ -22,9 +22,9 @@ function u1_circuit(::Type{T}, nbit_measure::Int, nbit_virtual::Int, nlayer::Int
     dispatch!(circuit, :random)
 end
 
-function model(::Val{:u1}, ::Type{T}; nbit = 20, V=4, B=4096, nlayer=5) where T
+function model(::Val{:u1}, ::Type{T}; nbit = 20, V=4, B=4096, nlayer=5, pairs) where T
     nrepeat = (nbit - V)
-    c = u1_circuit(T, 1, V, nlayer, nrepeat, pair_ring(1+V)) |> autodiff(:QC)
+    c = u1_circuit(T, 1, V, nlayer, nrepeat, pairs) |> autodiff(:QC)
     chem = QuantumMPS(1, V, 0, c, zero_state(T, V+1, B), [i%2 for i=1:nbit])
     chem
 end

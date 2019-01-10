@@ -1,6 +1,6 @@
 using Yao, Yao.Blocks
 
-export random_circuit, pair_ring
+export random_circuit, pair_ring, pair_square
 
 """
     pair_ring(n::Int) -> Vector
@@ -8,6 +8,47 @@ export random_circuit, pair_ring
 Pair ring.
 """
 pair_ring(n::Int) = [i=>mod(i, n)+1 for i=1:n]
+
+"""
+    pair_square(m::Int, n::Int) -> Vector
+
+Pair square.
+"""
+function pair_square(m::Int, n::Int; periodic::Bool)
+    nsite = m*n
+    res = Vector{Pair{Int, Int}}(undef, 2*nsite)
+    li = LinearIndices((m, n))
+    k = 1
+    for i = 1:2:m, j=1:n
+        if i == m && !periodic
+            continue
+        end
+        res[k] = li[i, j] => li[i%m+1, j]
+        k+=1
+    end
+    for i = 2:2:m, j=1:n
+        if i == m && !periodic
+            continue
+        end
+        res[k] = li[i, j] => li[i%m+1, j]
+        k+=1
+    end
+    for i = 1:m, j=1:2:n
+        if j == n && !periodic
+            continue
+        end
+        res[k] = li[i, j] => li[i, j%n+1]
+        k+=1
+    end
+    for i = 1:m, j=2:2:n
+        if j == n && !periodic
+            continue
+        end
+        res[k] = li[i, j] => li[i, j%n+1]
+        k+=1
+    end
+    res[1:k-1]
+end
 
 """
     cnot_entangler(T, n::Int, pairs::Vector{Pair}) = ChainBlock
@@ -61,8 +102,8 @@ function random_circuit(::Type{T}, nbit_measure::Int, nbit_virtual::Int, nlayer:
     dispatch!(circuit, :random)
 end
 
-function model(::Val{:random}, ::Type{T}; nbit::Int, V::Int, B::Int=4096, nlayer::Int=5) where T
-    c = random_circuit(T, 1, V, nlayer, nbit-V, pair_ring(V+1)) |> autodiff(:QC)
+function model(::Val{:random}, ::Type{T}; nbit::Int, V::Int, B::Int=4096, nlayer::Int=5, pairs) where T
+    c = random_circuit(T, 1, V, nlayer, nbit-V, pairs) |> autodiff(:QC)
     chem = QuantumMPS(1, V, 0, c, zero_state(T,V+1, B), zeros(Int, nbit))
     chem
 end
