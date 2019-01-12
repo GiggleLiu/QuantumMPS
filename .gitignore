@@ -16,4 +16,5 @@ _local/
 *.out
 *.log
 data/_*.dat
+data/_*.jld2
 __pycache__/

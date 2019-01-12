@@ -2,7 +2,6 @@ using CUDAnative, GPUArrays, CuArrays
 using CUDAnative: device!, devices, CuDevice
 using CuYao
 import CuYao: cu
-device!(CuDevice(2))
 CuArrays.allowscalar(false)
 
 function cu(chem::QuantumMPS)
