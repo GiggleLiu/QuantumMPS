@@ -1,3 +1,4 @@
+abstract type AbstractHeisenberg{D} <: AbstractModel{D} end
 struct Heisenberg{D} <: AbstractModel{D}
     size::NTuple{D, Int}
     periodic::Bool
@@ -11,21 +12,21 @@ const heisenberg_term = repeat(2, X, 1:2) + repeat(2, Y, 1:2) + repeat(2, Z, 1:2
 
 function hamiltonian(model::Heisenberg)
     nbit = nspin(model)
-    sum(x->heisenberg_ij(nbit, x.first, x.second), get_bonds(model))*0.25
+    sum(x->heisenberg_ij(nbit, x[1], x[2]), get_bonds(model))*0.25
 end
 
 function get_bonds(model::Heisenberg{2})
     m, n = model.size
     cis = LinearIndices(model.size)
-    bonds = Pair{Int, Int}[]
-    for i=1:model.size[1], j=1:model.size[2]
-        (i!=m || model.periodic) && push!(bonds, cis[i,j] => cis[i%m+1,j])
-        (j!=n || model.periodic) && push!(bonds, cis[i,j] => cis[i,j%n+1])
+    bonds = Tuple{Int, Int, Float64}[]
+    for i=1:m, j=1:n
+        (i!=m || model.periodic) && push!(bonds, (cis[i,j], cis[i%m+1,j], 1.0))
+        (j!=n || model.periodic) && push!(bonds, (cis[i,j], cis[i,j%n+1], 1.0))
     end
     bonds
 end
 
 function get_bonds(model::Heisenberg{1})
     nbit, = model.size
-    [i=>i%nbit+1 for i in 1:(model.periodic ? nbit : nbit-1)]
+    [(i, i%nbit+1, 1.0) for i in 1:(model.periodic ? nbit : nbit-1)]
 end

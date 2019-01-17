@@ -14,6 +14,7 @@ end
 
 """
 Ground state energy by sampling Quantum MPS.
+The hamiltonian is limited to Heisenberg and J1J2 Type.
 """
 function energy(chem::QuantumMPS, model::AbstractModel)
     T = datatype(chem.initial_reg)
@@ -47,7 +48,7 @@ function energy(chem::QuantumMPS, pauli::PauliGate, model::AbstractModel)
         @inbounds res[:,i+nrep-1] = 1 .- 2 .* measure_remove!(reg, 1)
     end
     for bond in get_bonds(model)
-        eng += mean(res[:,bond.first].*res[:,bond.second])
+        eng += bond[3]*mean(res[:,bond[1]].*res[:,bond[2]])
     end
     eng/4
 end
