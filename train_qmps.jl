@@ -48,7 +48,7 @@ const nbit = 16
 const VER = :random
 const USE_CUDA = true
 USE_CUDA && include("CuChem.jl")
-USE_CUDA && device!(CuDevice(0))
+USE_CUDA && device!(CuDevice(2))
 
 # load predefined model
 V = 4
@@ -59,4 +59,4 @@ println("Number of parameters is ", chem.circuit |> nparameters)
 flush(stdout)
 
 #chem = model(Val(VER), ComplexF32; nbit=nbit, V=4, B=4096)
-run_train(chem, Heisenberg(4, 4; periodic=false); VER=VER, niter=500, start_point=0)
+run_train(chem, Heisenberg(4, 4; periodic=false); VER=VER, niter=500, start_point=230)

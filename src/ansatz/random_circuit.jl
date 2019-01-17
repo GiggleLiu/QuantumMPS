@@ -89,13 +89,13 @@ function random_circuit(::Type{T}, nbit_measure::Int, nbit_virtual::Int, nlayer:
         for j=1:nlayer
             push!(unit, rotorset(T, nbit_used, false, false))
             push!(unit, entangler)
-            if i == nrepeat
-                push!(unit, rotorset(T, nbit_used, false, false))
-            else
-                for i = 1:nbit_measure
-                    push!(unit, put(nbit_used, i=>rotor(T, false, false)))
-                end
-            end
+            #if i == nrepeat
+            #    push!(unit, rotorset(T, nbit_used, false, false))
+            #else
+            #    for i = 1:nbit_measure
+            #        push!(unit, put(nbit_used, i=>rotor(T, false, false)))
+            #    end
+            #end
         end
         push!(circuit, unit)
     end
