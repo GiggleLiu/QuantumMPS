@@ -9,6 +9,8 @@ Pair ring.
 """
 pair_ring(n::Int) = [i=>mod(i, n)+1 for i=1:n]
 
+pair_ladder(n::Int) = vcat([i=>mod(i, n)+1 for i=1:2:n], [i=>mod(i, n)+1 for i=2:2:n])
+
 """
     pair_square(m::Int, n::Int) -> Vector
 
@@ -89,13 +91,6 @@ function random_circuit(::Type{T}, nbit_measure::Int, nbit_virtual::Int, nlayer:
         for j=1:nlayer
             push!(unit, rotorset(T, nbit_used, false, false))
             push!(unit, entangler)
-            #if i == nrepeat
-            #    push!(unit, rotorset(T, nbit_used, false, false))
-            #else
-            #    for i = 1:nbit_measure
-            #        push!(unit, put(nbit_used, i=>rotor(T, false, false)))
-            #    end
-            #end
         end
         push!(circuit, unit)
     end

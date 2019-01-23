@@ -16,12 +16,13 @@ function szsz_correlation(ground_state::AbstractRegister)
     for (token, var) in [
                          ("om", om),
                         ]
-        writedlm("data/_chem_exact_$(token)_N$(nbit).dat", var)
+        writedlm("data/_chem_j1j2_exact_$(token)_N$(nbit).dat", var)
     end
 end
 
 # load the model
-heis = Heisenberg(4, 4; periodic=false)
+#heis = Heisenberg(4, 4; periodic=false)
+heis = J1J2(4, 4; periodic=false, J2=0.5)
 using KrylovKit
 m = mat(hamiltonian(heis))
 E, V = eigsolve(m, 1, :SR)

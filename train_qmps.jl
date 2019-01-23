@@ -45,19 +45,20 @@ function run_train(chem, model; VER, niter=500, start_point=0, save_step=10)
 end
 
 const nbit = 16
-const VER = :random
+const VER = :su2
 const USE_CUDA = true
+const nlayer=5
 USE_CUDA && include("CuChem.jl")
-USE_CUDA && device!(CuDevice(2))
+USE_CUDA && device!(CuDevice(4))
 
 # load predefined model
 V = 4
-pairs = pair_ring(VER==:su2 ? V : V+1)
-chem = model(Val(VER), ComplexF32; nbit=nbit, V=V, B=4096, pairs=pairs)
+pairs = pair_ring(V+1)
+chem = model(Val(VER), ComplexF32; nbit=nbit, V=V, B=4096, pairs=pairs, nlayer=nlayer)
 USE_CUDA && (chem = chem |> cu)
 println("Number of parameters is ", chem.circuit |> nparameters)
 flush(stdout)
 
 #chem = model(Val(VER), ComplexF32; nbit=nbit, V=4, B=4096)
-#run_train(chem, Heisenberg(4, 4; periodic=false); VER=VER, niter=500, start_point=230)
-run_train(chem, J1J2(4, 4; periodic=false); VER=VER, niter=500, start_point=230)
+#run_train(chem, Heisenberg(4, 4; periodic=false); VER=VER, niter=500, start_point=0)
+run_train(chem, J1J2(4, 4; J2=0.5, periodic=false); VER=Symbol(VER,:_d,nlayer), niter=500, start_point=0)

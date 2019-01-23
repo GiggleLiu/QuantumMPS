@@ -29,11 +29,11 @@ function iterate(qo::QMPSOptimizer, state::Int=1)
     (grad, state+1)
 end
 
-function gradients_exact(chem; dbs=nothing)
+function gradients_exact(chem, hami; dbs=nothing)
     nbit = nbit_simulated(chem)
     circuit = chem2circuit(chem)
     if dbs == nothing
         dbs = collect(circuit, AbstractDiff)
     end
-    opdiff.(()->state_exact(chem), dbs, Ref(heisenberg(nbit-chem.nbit_ancilla, periodic=false)))
+    opdiff.(()->state_exact(chem), dbs, Ref(hami))
 end
