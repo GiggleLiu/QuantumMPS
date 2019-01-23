@@ -7,7 +7,7 @@ Random.seed!(5)
 function gradstat(hami; VER, Vmin, Vmax, R=10)
     means = zeros(Float64, R, Vmax-Vmin+1)
     for V = Vmin:Vmax
-        chem = model(Val(VER), ComplexF32; nbit=16, V=V, B=4096, pairs=pair_ring(V+1), nlayer=5) |> cu
+        chem = model(Val(VER), ComplexF32; nbit=20, V=V, B=4096, pairs=pair_ring(V+1), nlayer=5) |> cu
         nparam = chem.circuit |> nparameters
         println("Number of parameters = ", nparam)
         println("Number of vbits = ", V)
@@ -40,7 +40,7 @@ end
 
 const USE_CUDA = true
 USE_CUDA && include("CuChem.jl")
-USE_CUDA && device!(CuDevice(3))
+USE_CUDA && device!(CuDevice(0))
 
 
 function QMPS.state_exact(chem::QuantumMPS{<:GPUReg})
@@ -53,5 +53,5 @@ function QMPS.state_exact(chem::QuantumMPS{<:GPUReg})
         return psi0 |> circuit |> focus!((1:nbit-chem.nbit_ancilla)...) |> QMPS.remove_env!
     end
 end
-const op = J1J2(4, 4; J2=0.5, periodic=false) |> hamiltonian
-gradstat(op; Vmin=1, Vmax=15, VER=:u1)
+const op = Heisenberg(20; periodic=false) |> hamiltonian
+gradstat(op; Vmin=1, Vmax=19, VER=:su2)
