@@ -12,7 +12,7 @@ function measure_corr(chem::QuantumMPS, si::Pair{Int, <:PauliGate}, sj::Pair{Int
 
     input_state = chem.input_state
     reg = chem.initial_reg |> copy
-    nv = chem.nbit_virtual
+    nv = chem.nbit_virtual + chem.nbit_ancilla
     nrep = nrepeat(chem)
 
     for i = nrep+1:nrep+nv

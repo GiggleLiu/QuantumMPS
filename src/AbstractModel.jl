@@ -24,7 +24,7 @@ end
 function energy(chem::QuantumMPS, pauli::PauliGate, model::AbstractModel)
     input_state = chem.input_state
     reg = chem.initial_reg |> copy
-    nv = chem.nbit_virtual
+    nv = chem.nbit_virtual + chem.nbit_ancilla
     nrep = nrepeat(chem)
     T = datatype(chem.initial_reg)
 
@@ -57,7 +57,6 @@ function ground_state(model::AbstractModel)
     # get the ground state
     hami = hamiltonian(model)
     E, v = eigsolve(mat(hami), 1, :SR)
-    @show E[1]
     register(v[1])
 end
 

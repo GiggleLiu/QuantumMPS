@@ -7,7 +7,7 @@ Random.seed!(5)
 function gradstat(hami; VER, Vmin, Vmax, R=10)
     means = zeros(Float64, R, Vmax-Vmin+1)
     for V = Vmin:Vmax
-        chem = model(Val(VER), ComplexF32; nbit=16, V=V, B=4096, pairs=pair_ring(V+1), nlayer=5) |> cu
+        chem = model(Val(VER); nbit=16, V=V, B=4096, pairs=pair_ring(V+1), nlayer=5) |> cu
         nparam = chem.circuit |> nparameters
         println("Number of parameters = ", nparam)
         println("Number of vbits = ", V)
@@ -54,7 +54,7 @@ USE_CUDA && device!(CuDevice(3))
 function QMPS.state_exact(chem::QuantumMPS{<:GPUReg})
     circuit = chem2circuit(chem)
     nbit = nqubits(circuit)
-    psi0 = product_state(ComplexF32, nbit, chem.input_state|>Yao.Intrinsics.packbits) |> cu
+    psi0 = product_state(nbit, chem.input_state|>Yao.Intrinsics.packbits) |> cu
     if chem.nbit_ancilla == 0
         return psi0 |> circuit
     else
@@ -70,7 +70,7 @@ function S2(nbit::Int)
     sum([sum([put(nbit, i=>G) for i=1:nbit])^2 for G in [X, Y, Z]])
 end
 
-@show expect(S2(2), zero_state(2) |> QMPS.singlet_block(ComplexF32, 2,1,2))
+@show expect(S2(2), zero_state(2) |> QMPS.singlet_block(2,1,2))
 @show expect(S2(2), register([0.0+0im,0,0,1]))
 @show expect(S2(2), register([1.0+0im,0,0,0]))
 @show expect(S2(2), register([0.0+0im,1,1,0]/sqrt(2)))

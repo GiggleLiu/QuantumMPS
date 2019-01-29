@@ -31,7 +31,7 @@ nbit_simulated(chem::QuantumMPS) = chem.nbit_measure*nrepeat(chem) + chem.nbit_v
 function chem2circuit(tnchem)
     nbit = nbit_simulated(tnchem) + tnchem.nbit_ancilla
     nm = tnchem.nbit_measure
-    nv = tnchem.nbit_virtual
+    nv = tnchem.nbit_virtual + tnchem.nbit_ancilla
     c = chain(nbit)
     for (i, blk) in enumerate(tnchem.circuit)
         push!(c, concentrate(nbit, blk, [(i-1)*nm+1:i*nm..., nbit-nv+1:nbit...]))

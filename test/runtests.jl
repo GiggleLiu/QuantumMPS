@@ -6,15 +6,15 @@ using Test, Random
 
 # make it cluster state
 @testset "convert wave function check" begin
-    chem = model(:su2, ComplexF32; nbit=9, nlayer=2, B=10, V=5, pairs=pair_ring(5))
-    c = random_circuit(ComplexF32, 1, 4, 2, 5, pair_ring(5))
+    chem = model(:su2; nbit=9, nlayer=2, B=10, V=5, pairs=pair_ring(5))
+    c = random_circuit(1, 4, 2, 5, pair_ring(5))
     circuit = chem2circuit(chem)
     @test zero_state(nqubits(circuit)) |> circuit |> statevec |> length == 2^10
 end
 
 @testset "measure check" begin
     Random.seed!(5)
-    chem = model(:su2, ComplexF32; nbit=9, nlayer=2, B=10000, V=5, pairs=pair_ring(5))
+    chem = model(:su2; nbit=9, nlayer=2, B=10000, V=5, pairs=pair_ring(5))
     circuit = chem2circuit(chem)
 
     for (i, j) in [(3,5), (5,3), (3,7), (7,3), (6,8), (8,6)]
@@ -48,7 +48,7 @@ end
         nbit = nspin(hei)
         for xmodel in [:u1, :su2]
             pairs = pair_ring(xmodel==:su2 ? 4 : 5)
-            chem = model(:random, ComplexF32; nbit=nbit, B=10000, V=4, pairs=pairs)
+            chem = model(:random; nbit=nbit, B=10000, V=4, pairs=pairs)
             println("Number of parameters is ", chem.circuit |> nparameters)
             circuit = chem2circuit(chem)
             eng = energy(chem, hei)

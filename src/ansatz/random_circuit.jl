@@ -53,25 +53,25 @@ function pair_square(m::Int, n::Int; periodic::Bool)
 end
 
 """
-    cnot_entangler(T, n::Int, pairs::Vector{Pair}) = ChainBlock
+    cnot_entangler(n::Int, pairs::Vector{Pair}) = ChainBlock
 
 Arbitrary rotation unit, support lazy construction.
 """
-cnot_entangler(::Type{T}, n::Int, pairs) where T = chain(n, control(n, [ctrl], target=>XGate{T}()) for (ctrl, target) in pairs)
+cnot_entangler(n::Int, pairs) = chain(n, control(n, [ctrl], target=>X) for (ctrl, target) in pairs)
 
 """
-    rotor(T, noleading::Bool=false, notrailing::Bool=false) -> MatrixBlock
+    rotor(noleading::Bool=false, notrailing::Bool=false) -> MatrixBlock
 
 `Rz(η)⋅Rx(θ)⋅Rz(ξ)`, remove the first Rz gate if `noleading == true`, remove the last Rz gate if `notrailing == true`.
 """
-rotor(::Type{T}, noleading::Bool=false, notrailing::Bool=false) where T = noleading ? (notrailing ? Rx(T, 0) : chain(Rx(T, 0), Rz(T, 0))) : (notrailing ? chain(Rz(T, 0), Rx(T, 0)) : chain(Rz(T, 0), Rx(T, 0), Rz(T, 0)))
+rotor(noleading::Bool=false, notrailing::Bool=false) = noleading ? (notrailing ? Rx(0) : chain(Rx(0), Rz(0))) : (notrailing ? chain(Rz(0), Rx(0)) : chain(Rz(0), Rx(0), Rz(0)))
 
 """
-    rotorset(T, noleading::Bool=false, notrailing::Bool=false) -> ChainBlock
+    rotorset(noleading::Bool=false, notrailing::Bool=false) -> ChainBlock
 
 A sequence of rotors applied on all sites.
 """
-rotorset(::Type{T}, nbit::Int, noleading::Bool=false, notrailing::Bool=false) where T = chain(nbit, [put(nbit, j=>rotor(T, noleading, notrailing)) for j=1:nbit])
+rotorset(nbit::Int, noleading::Bool=false, notrailing::Bool=false) = chain(nbit, [put(nbit, j=>rotor(noleading, notrailing)) for j=1:nbit])
 
 """
 A kind of widely used differentiable quantum circuit, angles in the circuit are randomely initialized.
@@ -81,15 +81,15 @@ ref:
        Hardware-efficient Quantum Optimizer for Small Molecules and Quantum Magnets. Nature Publishing Group, 549(7671), 242–246.
        https://doi.org/10.1038/nature23879.
 """
-function random_circuit(::Type{T}, nbit_measure::Int, nbit_virtual::Int, nlayer::Int, nrepeat::Int, entangler_pairs) where T
+function random_circuit(nbit_measure::Int, nbit_virtual::Int, nlayer::Int, nrepeat::Int, entangler_pairs)
     circuit = sequence()
     nbit_used = nbit_measure + nbit_virtual
-    entangler = cnot_entangler(T, nbit_used, entangler_pairs)
+    entangler = cnot_entangler(nbit_used, entangler_pairs)
 
     for i=1:nrepeat
-        unit = chain(T, nbit_used)
+        unit = chain(nbit_used)
         for j=1:nlayer
-            push!(unit, rotorset(T, nbit_used, false, false))
+            push!(unit, rotorset(nbit_used, false, false))
             push!(unit, entangler)
         end
         push!(circuit, unit)
@@ -97,8 +97,8 @@ function random_circuit(::Type{T}, nbit_measure::Int, nbit_virtual::Int, nlayer:
     dispatch!(circuit, :random)
 end
 
-function model(::Val{:random}, ::Type{T}; nbit::Int, V::Int, B::Int=4096, nlayer::Int=5, pairs) where T
-    c = random_circuit(T, 1, V, nlayer, nbit-V, pairs) |> autodiff(:QC)
-    chem = QuantumMPS(1, V, 0, c, zero_state(T,V+1, B), zeros(Int, nbit))
+function model(::Val{:random}; nbit::Int, V::Int, B::Int=4096, nlayer::Int=5, pairs)
+    c = random_circuit(1, V, nlayer, nbit-V, pairs) |> autodiff(:QC)
+    chem = QuantumMPS(1, V, 0, c, zero_state(V+1, B), zeros(Int, nbit))
     chem
 end
