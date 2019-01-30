@@ -6,3 +6,7 @@ JLD2 = "033835bb-8acc-5ee8-8aae-3f567f8a3819"
 KrylovKit = "0b1a1467-8014-51b9-945f-bf0ae24f4b77"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 Yao = "5872b779-8223-5990-8dd0-5abbb0748c8c"
+
+[extras]
+CUDAnative = "be33ccc6-a3ff-5ff2-a52e-74243cff1e17"
+CuArrays = "3a865a2d-5b23-5a0f-bc46-62713ec82fae"
