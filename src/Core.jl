@@ -25,7 +25,7 @@ end
 getblock(chem::QuantumMPS, i::Int) = chem.circuit[i]
 nrepeat(chem::QuantumMPS) = length(chem.circuit)
 nbit_used(chem::QuantumMPS) = nqubits(chem.circuit[1])
-nbit_simulated(chem::QuantumMPS) = chem.nbit_measure*nrepeat(chem) + chem.nbit_virtual - chem.nbit_ancilla
+nbit_simulated(chem::QuantumMPS) = chem.nbit_measure*nrepeat(chem) + chem.nbit_virtual
 
 """convert a chem circuit to a circuit with no reuse"""
 function chem2circuit(tnchem)

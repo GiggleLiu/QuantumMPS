@@ -38,7 +38,7 @@ end
 
 function model(::Val{:su2}; nbit, V, B=4096, nlayer=5, pairs)
     nrepeat = nbit - V
-    c = su2_circuit(V+1, nlayer, nrepeat, pairs) |> autodiff(:QC)
-    chem = QuantumMPS(1, V+1, 1, c, zero_state(V+2, B), zeros(Int, nbit+1))
+    c = su2_circuit(V, nlayer, nrepeat, pairs) |> autodiff(:QC)
+    chem = QuantumMPS(1, V, 1, c, zero_state(V+2, B), zeros(Int, nbit+1))
     chem
 end
