@@ -1,66 +1,58 @@
 # QuantumMPS
 Matrix product state (MPS) inspired quantum circuits for variational quantum eigensolver (VQE).
 
-## Table of Contents
-This project contains
-
-![](docs/images/qcbm.png)
+Physical models includes: 1D and 2D Heisenberg model, with and without frustration, OBC and PBC,
+Circuit Block ansatz includes: General, U(1) and SU(2) symmetric ansatz.
 
 ## Setup Guide
-Set up your python environment
+Set up your julia environment
 
-* python 3.6
-* install python libraries
+* [julia 1.0+](https://julialang.org/)
+* install required julia libraries: `Yao`, `DelimitedFiles`, `FileIO`, `Fire`, `JLD2`, `KrylovKit` and `StatsBase`. e.g. to install the high performance variational quantum simulation package `Yao`,
+one can open a julia REPL and type `]` to enter the `pkg` mode, keep your internet connected and type
+```julia console
+pkg> add Yao
+```
 
-If you want to read notebooks only and do not want to use features like [`projectq`](https://github.com/ProjectQ-Framework/ProjectQ), having `numpy`, `scipy` and `matplotlib` is enough.
-To access advanced features, you should install `fire`, `projectq` and `climin`.
-```bash
-$ conda install -c conda-forge pybind11
-$ pip install -r requirements.txt
+To access GPU, you need the extra packages: `CUDAnative`, `CuArrays` and `CuYao`.
+CuYao has not been registered yet, so 
+```julia console
+pkg> dev CuYao
 ```
 
 Clone this repository [https://github.com/GiggleLiu/QuantumCircuitBornMachine.git](https://github.com/GiggleLiu/QuantumCircuitBornMachine.git) to your local host.
 
-### Access online materials
-1. Sign up and sign in [Google drive](https://drive.google.com/)
-2. Connect Google drive with [Google Colaboratory](https://colab.research.google.com)
-    - right click on google drive page
-    - More
-    - Connect more apps
-    - search "Colaboratory" and "CONNECT"
-3. You can make a copy of notebook to your google drive (File Menu) to save your edits.
-
-## Run Bar-and-Stripes Demo on Your Localhost
-
+## Run an Example
+As an example, we solve the ground state and get the ground state property of frustrated Heisenberg model with J2 = 0.5 on 4 x 4 lattice,
+to run the training, one can type
 ```bash
-$ ./program.py checkgrad  # check the correctness of gradient
-$ ./program.py statgrad  # check gradient will not vanish as layer index increase.
-$ ./program.py vcircuit  # visualize circuit using ProjectQ
-$ ./program.py train   # train and save data.
-$ ./program.py vpdf   # see bar stripe dataset PDF
-$ ./program.py generate  # generate bar and stripes using trainned circuit.
+$ julia j1j2.jl train su2      # train a SU2 symmetric model
+```
+
+The above training can be very very slow, please turn on your GPU if you have one, which can be achieved by setting `USE_CUDA = true` in file `applications.jl`.
+With GPU acceleration, models can be trained in 5-48 hours.
+With or without GPU, you can calculate the correlation function and energy using pre-trained data in `data/`.
+```bash
+$ julia j1j2.jl trained szsz su2     # Sz(i)*Sz(j) correlation matrix
+$ julia j1j2.jl trained energy su2   # sample energy expectation value
+$ julia j1j2.jl trained fidelity su2   # fidelity with respect to the exact ground state
+$ julia j1j2.jl trained fidelity su2 --depth=1
 ```
 
 ## Documentations
 
-* paper: Differentiable Learning of Quantum Circuit Born Machine ([pdf](docs/1804.04168.pdf)), [arXiv:1804.04168](https://arxiv.org/abs/1804.04168), Jin-Guo Liu, Lei Wang
-* slides: [online](https://docs.google.com/presentation/d/1ZNysy-MUlkPfuxUtZMz_Sd8Mz43oC6y7FcyeGGMaQoU/edit?usp=sharing)
+* paper: Variational Quantum Eigensolver with Fewer Qubits ([pdf]()), [arXiv:xxxxxx](https://arxiv.org/abs/xxxxxx), Jin-Guo Liu, Yi-Hong Zhang, Yuan Wang and Lei Wang
+* slides: [online]()
 
 ## Citation
 
 If you use this code for your research, please cite our paper:
 
 ```
-@article{Liu2018,
-  author = {Jin-Guo Liu and Lei Wang},
-  title = {Differentiable Learning of Quantum Circuit Born Machine},
-  year = {2018},
-  eprint = {arXiv:1804.04168},
-  url = {https://arxiv.org/abs/1804.04168}
+@article{Liu2019,
 }
 ```
 
 ## Authors
-
 * Jin-Guo Liu <cacate0129@iphy.ac.cn>
-* Lei Wang <wanglei@iphy.ac.cn>
+* Yi-Hong Zhang <yh-zhang17@mails.tsinghua.edu.cn>

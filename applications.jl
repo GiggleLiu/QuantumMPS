@@ -17,7 +17,7 @@ simple_model_j1j2(size...) = J1J2(size...; periodic=false, J2=0.5)
 """
     simple_ansatz(nbit::Int, symmetry::Symbol, depth::Int; load_params::Bool=false)
 
-Load a predefined MPS inspired ansatz with 4 virtual qubits, batch size 4096, depth 5.
+Load a predefined MPS inspired ansatz with 4 virtual qubits, batch size 4096.
 If `load_params` is `true`, load parameters in training step 500.
 """
 function simple_ansatz(nbit::Int, symmetry::Symbol, depth::Int; load_params::Bool=false)
@@ -25,7 +25,7 @@ function simple_ansatz(nbit::Int, symmetry::Symbol, depth::Int; load_params::Boo
     batch_size = 4096
     load_step = 500
 
-    ansatz = model(Val(symmetry); nbit=nbit, V=V, B=batch_size, pairs=pair_ring(V+1))
+    ansatz = model(Val(symmetry); nbit=nbit, nlayer=depth, V=V, B=batch_size, pairs=pair_ring(V+1))
     USE_CUDA && (ansatz = ansatz |> cu)
 
     if load_params
