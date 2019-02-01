@@ -2,6 +2,11 @@ include("applications.jl")
 
 using Fire
 
+@main function sample_cluster()
+    m = model(Val(:cluster); nbit=3, B=10)
+    @show gensample(m, X)
+end
+
 """
     julia j1j2.jl train [--symmetry <su2|u1|general>] [--depth <Int>]
 

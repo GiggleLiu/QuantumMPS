@@ -1,5 +1,4 @@
-abstract type AbstractHeisenberg{D} <: AbstractModel{D} end
-struct Heisenberg{D} <: AbstractModel{D}
+struct Heisenberg{D} <: AbstractHeisenberg{D}
     size::NTuple{D, Int}
     periodic::Bool
     Heisenberg(size::Int...; periodic::Bool) = new{length(size)}(size, periodic)

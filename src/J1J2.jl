@@ -1,6 +1,6 @@
 export J1J2
 
-struct J1J2{D} <: AbstractModel{D}
+struct J1J2{D} <: AbstractHeisenberg{D}
     size::NTuple{D, Int}
     periodic::Bool
     J2::Float64
