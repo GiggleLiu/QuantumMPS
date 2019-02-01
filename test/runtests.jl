@@ -48,7 +48,7 @@ end
         nbit = nspin(hei)
         for xmodel in [:u1, :su2]
             pairs = pair_ring(xmodel==:su2 ? 4 : 5)
-            chem = model(:random; nbit=nbit, B=10000, V=4, pairs=pairs)
+            chem = model(:general; nbit=nbit, B=10000, V=4, pairs=pairs)
             println("Number of parameters is ", chem.circuit |> nparameters)
             circuit = chem2circuit(chem)
             eng = energy(chem, hei)
