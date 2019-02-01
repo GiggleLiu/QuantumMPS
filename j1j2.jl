@@ -2,11 +2,12 @@ include("applications.jl")
 
 using Fire
 
-@main function train(symmetry::Symbol; depth=5)
+@main function train(symmetry::Symbol; depth=1)
+    USE_CUDA || @warn "You are not using GPU, this training may take life long!"
     model = simple_model_j1j2(4, 4)
     ansatz = simple_ansatz(16, symmetry, depth; load_params=false)
 
-    run_train(ansatz, model; SAVE_ID=Symbol(VER,:_d,nlayer), niter=500, start_point=0)
+    run_train(ansatz, model; SAVE_ID=Symbol(symmetry,:_d,depth), niter=500, start_point=0)
 end
 
 @main function trained(task::String, symmetry::Symbol=:su2; depth::Int=5)
