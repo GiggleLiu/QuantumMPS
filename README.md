@@ -2,13 +2,13 @@
 Matrix product state (MPS) inspired quantum circuits for variational quantum eigensolver (VQE).
 
 Physical models includes: 1D and 2D Heisenberg model, with or without frustration, OBC or PBC,
-Circuit Block ansatz symmetries includes: General, U(1) and SU(2) symmetric ansatz.
+Circuit Block ansatz includes: General, U(1) and SU(2) symmetric ansatz.
 
 ## Setup Guide
 Set up your julia environment
 
 * [julia 1.0+](https://julialang.org/)
-* install required julia libraries: `Yao`, `DelimitedFiles`, `FileIO`, `Fire`, `JLD2`, `KrylovKit` and `StatsBase`. e.g. to install the high performance variational quantum simulation package `Yao`,
+* install required julia libraries: `Yao`, `DelimitedFiles`, `FileIO`, `Fire`, `JLD2`, `KrylovKit` and `StatsBase`. For example, to install `Yao`,
 one can open a julia REPL and type `]` to enter the `pkg` mode, keep your internet connected and type
 ```julia console
 pkg> add Yao
