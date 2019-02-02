@@ -1,5 +1,4 @@
 [deps]
-CuYao = "b48ca7a8-dd42-11e8-2b8e-1b7706800275"
 DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
 FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
 Fire = "652a1917-b8e5-5d9b-be38-bbf27e56fe44"
@@ -11,3 +10,4 @@ Yao = "5872b779-8223-5990-8dd0-5abbb0748c8c"
 [extras]
 CUDAnative = "be33ccc6-a3ff-5ff2-a52e-74243cff1e17"
 CuArrays = "3a865a2d-5b23-5a0f-bc46-62713ec82fae"
+CuYao = "b48ca7a8-dd42-11e8-2b8e-1b7706800275"

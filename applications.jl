@@ -4,9 +4,9 @@ using QMPS
 using DelimitedFiles, JLD2, FileIO
 
 # CUDA switch
-const USE_CUDA = true
-USE_CUDA && device!(CuDevice(0))
+const USE_CUDA = false
 USE_CUDA && include("CuChem.jl")
+USE_CUDA && device!(CuDevice(0))
 
 """Heisenberg model without frustration, with open boundary condition."""
 simple_model_heis(size...) = Heisenberg(size...; periodic=false)
