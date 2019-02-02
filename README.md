@@ -62,4 +62,5 @@ If you use this code for your research, please cite our paper:
 ```
 
 ## Authors
-* Jin-Guo Liu <cacate0129@iphy.ac.cn>
+See [contributors](https://github.com/GiggleLiu/QuantumMPS/graphs/contributors) page.
+
