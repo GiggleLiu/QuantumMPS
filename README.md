@@ -2,6 +2,7 @@
 Matrix product state (MPS) inspired quantum circuits for variational quantum eigensolver (VQE).
 
 Physical models includes: 1D and 2D Heisenberg model, with or without frustration, OBC or PBC,
+
 Circuit Block ansatz includes: General, U(1) and SU(2) symmetric ansatz.
 
 ## Setup Guide
@@ -26,6 +27,7 @@ Clone this repository [https://github.com/GiggleLiu/QuantumMPS.git](https://gith
 ## Run an Example
 As an example, we solve the ground state and get the ground state property of frustrated Heisenberg model with J2 = 0.5 on 4 x 4 lattice,
 to run the training, one can type
+
 ```bash
 $ julia j1j2.jl train --symmetry su2 --depth 1
 ```
@@ -48,7 +50,7 @@ $ julia j1j2.jl trained --help
 
 ## Documentations
 
-* paper: Variational Quantum Eigensolver with Fewer Qubits ([pdf]()), [arXiv:xxxxxx](https://arxiv.org/abs/xxxxxx), Jin-Guo Liu, Yi-Hong Zhang, Yuan Wang and Lei Wang
+* paper: Variational Quantum Eigensolver with Fewer Qubits ([pdf]()), [arXiv:xxxxxx](https://arxiv.org/abs/xxxxxx), Jin-Guo Liu, Yihong Zhang, Yuan Wang and Lei Wang
 * slides: [online]()
 
 ## Citation
@@ -61,4 +63,3 @@ If you use this code for your research, please cite our paper:
 
 ## Authors
 * Jin-Guo Liu <cacate0129@iphy.ac.cn>
-* ???
