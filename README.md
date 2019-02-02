@@ -6,23 +6,17 @@ Physical models includes: 1D and 2D Heisenberg model, with or without frustratio
 Circuit Block ansatz includes: General, U(1) and SU(2) symmetric ansatz.
 
 ## Setup Guide
+
+Clone this repository [https://github.com/GiggleLiu/QuantumMPS.git](https://github.com/GiggleLiu/QuantumMPS.git) to your local host.
+
 Set up your julia environment
 
 * [julia 1.0+](https://julialang.org/)
-* install required julia libraries: `Yao`, `DelimitedFiles`, `FileIO`, `Fire`, `JLD2`, `KrylovKit` and `StatsBase`. For example, to install `Yao`,
-one can open a julia REPL and type `]` to enter the `pkg` mode, keep your internet connected and type
-```julia console
-pkg> add Yao
+* install required julia libraries: `Yao`, `DelimitedFiles`, `FileIO`, `Fire`, `JLD2`, `KrylovKit` and `StatsBase`. To access GPU, you need the extra packages: `CUDAnative`, `CuArrays` and `CuYao`. They can be resolved by typing
+```bash
+$ julia resolve_env.jl # if a GPU is available
+$ julia resolve_env.jl nocuda
 ```
-
-To access GPU, you need the extra packages: `CUDAnative`, `CuArrays` and `CuYao`.
-Since `CuYao` has not been registered yet, please use
-```julia console
-pkg> dev CuYao
-```
-To install this CUDA extension for Yao.
-
-Clone this repository [https://github.com/GiggleLiu/QuantumMPS.git](https://github.com/GiggleLiu/QuantumMPS.git) to your local host.
 
 ## Run an Example
 As an example, we solve the ground state and get the ground state property of frustrated Heisenberg model with J2 = 0.5 on 4 x 4 lattice,
@@ -33,7 +27,7 @@ $ julia j1j2.jl train --symmetry su2 --depth 1
 ```
 Here, `symmetry` and `depth` are optional parameters to specify symmetry of ansatz and depth of circuit block.
 The default symmetry is `su2` and the default circuit depth is 5.
-The above training with default setting can be very very slow. Please turn on the GPU switch by setting `USE_CUDA = true` in file `applications.jl` if you have a GPU that supports CUDA. With Nvidia Titan V, training can be accelerated by a factor of ~35 comparing with the sequential CPU version, but still takes several hours. Decreasing the circuit depth can also accelerate the training.
+The above training with default setting can be very very slow. With Nvidia Titan V, training can be accelerated by a factor of ~35 comparing with the sequential CPU version, but still takes several hours. Decreasing the circuit depth can also accelerate the training.
 
 With or without GPU, you can calculate the correlation function and energy per site using pre-trained data in `data/`
 ```bash

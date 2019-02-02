@@ -4,7 +4,7 @@ using QMPS
 using DelimitedFiles, JLD2, FileIO
 
 # CUDA switch
-const USE_CUDA = false
+const USE_CUDA = haskey(Pkg.installed(), "CuYao")
 USE_CUDA && include("CuChem.jl")
 USE_CUDA && device!(CuDevice(0))
 
