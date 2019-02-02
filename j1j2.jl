@@ -14,7 +14,7 @@ Train a 4 x 4 frustrated Heisenberg model with J2 = 0.5.
 Available ansatz symmetries includes `general`, `u1` and `su2`.
 """
 @main function train(;symmetry::Symbol=:su2, depth=5)
-    USE_CUDA || @warn "You are not using GPU, this training may take life long!"
+    USE_CUDA || @warn "You are not using GPU (35 x speed up), this training may take life long. Turn on the switch in file `applications.jl` if you have a GPU that supports CUDA!"
     model = simple_model_j1j2(4, 4)
     ansatz = simple_ansatz(16, symmetry, depth; load_params=false)
 
@@ -22,14 +22,19 @@ Available ansatz symmetries includes `general`, `u1` and `su2`.
 end
 
 """
-    julia j1j2.jl trained <energy|fidelity|szsz> [--symmetry <su2|u1|general>] [--depth <Int>]
+    julia j1j2.jl measure <energy|fidelity|szsz> [--symmetry <su2|u1|general>] [--depth <Int>]
 
 Load a pre-trained ansatz for 4 x 4 frustrated Heisenberg model with J2 = 0.5, tasks includes
 * energy, sample the energy.
 * fidelity, calculated the exact fidelity
 * szsz, calculate the <sz(i)*sz(j)> correlation matrix.
+
+Pre-trained ansatz includes
+* --symmetry su2, --depth <1-5>
+* --symmetry u1, --depth 5
+* --symmetry random, --depth 5
 """
-@main function trained(task::String; symmetry::Symbol=:su2, depth::Int=5)
+@main function measure(task::String; symmetry::Symbol=:su2, depth::Int=5)
     model = simple_model_j1j2(4, 4)
     ansatz = simple_ansatz(16, symmetry, depth; load_params=true)
     nbit = nbit_simulated(ansatz)
