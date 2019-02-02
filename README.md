@@ -37,9 +37,8 @@ The above training with default setting can be very very slow. Please turn on th
 
 With or without GPU, you can calculate the correlation function and energy per site using pre-trained data in `data/`
 ```bash
-$ julia j1j2.jl measure szsz                    # Sz(i)*Sz(j) correlation matrix
+$ julia j1j2.jl measure szsz -- depth 1         # Sz(i)*Sz(j) correlation matrix, default depth is 5.
 $ julia j1j2.jl measure energy --symmetry su2   # sample energy expectation value
-$ julia j1j2.jl measure fidelity --depth 1      # default depth is 5
 ```
 
 To get help on input parameters, you can type

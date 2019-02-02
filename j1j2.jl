@@ -26,8 +26,11 @@ end
 
 Load a pre-trained ansatz for 4 x 4 frustrated Heisenberg model with J2 = 0.5, tasks includes
 * energy, sample the energy.
-* fidelity, calculated the exact fidelity
 * szsz, calculate the <sz(i)*sz(j)> correlation matrix.
+
+Also, we can obtain some exact quantities in simulation for analysis
+* fidelity, calculated the exact fidelity
+* energy_exact, calculated the exact energy
 
 Pre-trained ansatz includes
 * --symmetry su2, --depth <1-5>
