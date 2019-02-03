@@ -1,5 +1,10 @@
 export J1J2
 
+"""
+    J1J2{D} <: AbstractHeisenberg{D}
+
+frustrated Heisenberg model.
+"""
 struct J1J2{D} <: AbstractHeisenberg{D}
     size::NTuple{D, Int}
     periodic::Bool

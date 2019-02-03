@@ -5,6 +5,11 @@ function u1_unit(nbit::Int, i::Int, j::Int)
     )
 end
 
+"""
+    u1_circuit(nbit_measure::Int, nbit_virtual::Int, nlayer::Int, nrepeat::Int, entangler_pairs) -> Sequence
+
+U(1) symmetric quantum circuit ansatz.
+"""
 function u1_circuit(nbit_measure::Int, nbit_virtual::Int, nlayer::Int, nrepeat::Int, entangler_pairs)
     circuit = sequence()
     nbit_used = nbit_measure + nbit_virtual

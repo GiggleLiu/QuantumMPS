@@ -44,14 +44,13 @@ $ julia j1j2.jl measure --help
 ## Documentations
 
 * paper: Variational Quantum Eigensolver with Fewer Qubits ([pdf]()), [arXiv:xxxxxx](https://arxiv.org/abs/xxxxxx), Jin-Guo Liu, Yihong Zhang, Yuan Wan and Lei Wang
-* slides: [online]()
 
 ## Citation
 
 You are welcome to use this code for your research. Please kindly cite:
 
 ```
-<arXiv citation>
+<arXiv preprint will release soon.>
 ```
 
 ## Authors

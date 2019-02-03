@@ -5,6 +5,7 @@ using DelimitedFiles, JLD2, FileIO, Pkg
 
 # CUDA switch
 const USE_CUDA = haskey(Pkg.installed(), "CuYao")
+if USE_CUDA && println("Using CUDA since `CuYao` is detected. Edit `applications.jl` file to modify CUDA settings, like switching computing devices.")
 USE_CUDA && include("CuChem.jl")
 USE_CUDA && device!(CuDevice(0))
 
@@ -61,8 +62,15 @@ end
 
 """
     run_train(ansatz, model; SAVE_ID, niter=500, start_point=0, save_step=0)
+
+Run a variational quantum eigensolver to solve a `model` Hamiltonian with MPS inspired `ansatz`
+
+* SAVE_ID, token used for saving data,
+* niter, number of training steps,
+* start_point, load a save point, default is 0 (random parameters).
+* save_step, save the training every `save_step` steps.
 """
-function run_train(ansatz, model; SAVE_ID, niter=500, start_point=0, save_step=10)
+function run_train(ansatz, model; SAVE_ID, niter::Int=500, start_point::Int=0, save_step::Int=10)
     nbit = nbit_simulated(ansatz)
     V = ansatz.nbit_virtual
     filename(k::Int) = "data/chem_$(SAVE_ID)_N$(nbit)_V$(V)_S$(k).jld2"

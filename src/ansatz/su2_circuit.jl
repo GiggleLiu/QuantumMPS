@@ -2,6 +2,11 @@ function su2_unit(nbit::Int, i::Int, j::Int)
     put(nbit, (i,j)=>rot(SWAP, 0.0))
 end
 
+"""
+    su2_circuit(nbit_virtual::Int, nlayer::Int, nrepeat::Int, pairs::Vector) -> Sequence
+
+SU(2) symmetry quantum circuit ansatz for evolving states in S^2 = 0 good quantum number block. It requires `2+nbit_virtual` qubits, `pairs` is the geometry of entanglements.
+"""
 function su2_circuit(nbit_virtual::Int, nlayer::Int, nrepeat::Int, pairs::Vector)
     circuit = sequence()
     nbit_used = 2 + nbit_virtual
@@ -30,6 +35,7 @@ function su2_circuit(nbit_virtual::Int, nlayer::Int, nrepeat::Int, pairs::Vector
     dispatch!(circuit, :random)
 end
 
+"""construct a circuit for generating singlets."""
 function singlet_block(nbit::Int, i::Int, j::Int)
     unit = chain(nbit)
     push!(unit, put(nbit, i=>chain(X, H)))
