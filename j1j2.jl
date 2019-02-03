@@ -13,7 +13,7 @@ end
 Train a 4 x 4 frustrated Heisenberg model with J2 = 0.5.
 Available ansatz symmetries includes `general`, `u1` and `su2`.
 """
-@main function train(;symmetry::Symbol=:su2, depth=5)
+@main function train(;symmetry::Symbol=:su2, depth::Int=5)
     USE_CUDA || @warn "You are not using GPU (35 x speed up), this training may take life long. Turn on the switch in file `applications.jl` if you have a GPU that supports CUDA!"
     model = simple_model_j1j2(4, 4)
     ansatz = simple_ansatz(16, symmetry, depth; load_params=false)

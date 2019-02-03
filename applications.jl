@@ -1,7 +1,7 @@
 push!(LOAD_PATH, abspath("src"))
 using Yao
 using QMPS
-using DelimitedFiles, JLD2, FileIO
+using DelimitedFiles, JLD2, FileIO, Pkg
 
 # CUDA switch
 const USE_CUDA = haskey(Pkg.installed(), "CuYao")
