@@ -43,16 +43,17 @@ $ julia j1j2.jl measure --help
 
 ## Documentations
 
-* paper: Variational Quantum Eigensolver with Fewer Qubits ([pdf]()), [arXiv:xxxxxx](https://arxiv.org/abs/xxxxxx), Jin-Guo Liu, Yihong Zhang, Yuan Wan and Lei Wang
+* paper: Variational Quantum Eigensolver with Fewer Qubits ([pdf](https://arxiv.org/pdf/1902.02663.pdf)), [arXiv:1902.02663](https://arxiv.org/abs/1902.02663), Jin-Guo Liu, Yihong Zhang, Yuan Wan and Lei Wang
 
 ## Citation
 
 You are welcome to use this code for your research. Please kindly cite:
 
 ```
-<arXiv preprint will release soon.>
+@article{Liu2019,
+  author = {Jin-Guo Liu, Yi-Hong Zhang, Yuan Wan and Lei Wang},
+  title = {Variational Quantum Eigensolver with Fewer Qubits},
+  eprint = {arXiv:1902.02663},
+  url = {https://arxiv.org/abs/1902.02663}
+}
 ```
-
-## Authors
-See [contributors](https://github.com/GiggleLiu/QuantumMPS/graphs/contributors) page.
-
