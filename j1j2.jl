@@ -35,7 +35,7 @@ Also, we can obtain some exact quantities in simulation for analysis
 Pre-trained ansatz includes
 * --symmetry su2, --depth <1-5>
 * --symmetry u1, --depth 5
-* --symmetry random, --depth 5
+* --symmetry general, --depth 5
 """
 @main function measure(task::String; symmetry::Symbol=:su2, depth::Int=5)
     model = simple_model_j1j2(4, 4)
