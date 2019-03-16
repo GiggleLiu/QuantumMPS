@@ -16,13 +16,12 @@ simple_model_heis(size...) = Heisenberg(size...; periodic=false)
 simple_model_j1j2(size...) = J1J2(size...; periodic=false, J2=0.5)
 
 """
-    simple_ansatz(nbit::Int, symmetry::Symbol, depth::Int; load_params::Bool=false)
+    simple_ansatz(nbit::Int, symmetry::Symbol, depth::Int; V::Int, load_params::Bool=false)
 
 Load a predefined MPS inspired ansatz with 4 virtual qubits, batch size 4096.
 If `load_params` is `true`, load parameters in training step 500.
 """
-function simple_ansatz(nbit::Int, symmetry::Symbol, depth::Int; load_params::Bool=false)
-    V = 4     # number of virtual qubits
+function simple_ansatz(nbit::Int, symmetry::Symbol, depth::Int; V::Int, load_params::Bool=false)
     batch_size = 4096
     load_step = 500
 

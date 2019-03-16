@@ -15,8 +15,8 @@ Available ansatz symmetries includes `general`, `u1` and `su2`.
 """
 @main function train(;symmetry::Symbol=:su2, depth::Int=5)
     USE_CUDA || @warn "You are not using GPU (35 x speed up), this training may take life long. Turn on the switch in file `applications.jl` if you have a GPU that supports CUDA!"
-    model = simple_model_j1j2(4, 4)
-    ansatz = simple_ansatz(16, symmetry, depth; load_params=false)
+    model = simple_model_j1j2(8)
+    ansatz = simple_ansatz(8, symmetry, depth; load_params=false, V=3)
 
     run_train(ansatz, model; SAVE_ID=Symbol(symmetry,:_d,depth), niter=500, start_point=0)
 end
@@ -38,8 +38,8 @@ Pre-trained ansatz includes
 * --symmetry random, --depth 5
 """
 @main function measure(task::String; symmetry::Symbol=:su2, depth::Int=5)
-    model = simple_model_j1j2(4, 4)
-    ansatz = simple_ansatz(16, symmetry, depth; load_params=true)
+    model = simple_model_j1j2(8)
+    ansatz = simple_ansatz(8, symmetry, depth; load_params=true, V=3)
     nbit = nbit_simulated(ansatz)
 
     if task == "energy"
