@@ -1,4 +1,4 @@
-using CUDAnative, GPUArrays, CuArrays
+using CUDAnative, CuArrays
 using CUDAnative: device!, devices, CuDevice
 using CuYao
 import CuYao: cu
