@@ -8,8 +8,8 @@ end
 SU(2) symmetry quantum circuit ansatz for evolving states in S^2 = 0 good quantum number block. It requires `2+nbit_virtual` qubits, `pairs` is the geometry of entanglements.
 """
 function su2_circuit(nbit_virtual::Int, nlayer::Int, nrepeat::Int, pairs::Vector)
-    circuit = sequence()
     nbit_used = 2 + nbit_virtual
+    circuit = chain(nbit_used)
     for i=1:nrepeat
         unit = chain(nbit_used)
         if i==1
@@ -45,6 +45,6 @@ end
 function model(::Val{:su2}; nbit, V, B=4096, nlayer=5, pairs)
     nrepeat = nbit - V
     c = su2_circuit(V, nlayer, nrepeat, pairs) |> autodiff(:QC)
-    chem = QuantumMPS(1, V, 1, c, zero_state(V+2, B), zeros(Int, nbit+1))
+    chem = QuantumMPS(1, V, 1, c, zero_state(V+2, nbatch=B), zeros(Int, nbit+1))
     chem
 end

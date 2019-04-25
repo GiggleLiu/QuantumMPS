@@ -31,7 +31,7 @@ The above training with default setting can be very very slow. With Nvidia Titan
 
 You can meaure the correlation function and energy per site using pre-trained model stored in `data/`
 ```bash
-$ julia j1j2.jl measure szsz -- depth 1         # Sz(i)*Sz(j) correlation matrix, default depth is 5.
+$ julia j1j2.jl measure szsz --depth 1         # Sz(i)*Sz(j) correlation matrix, default depth is 5.
 $ julia j1j2.jl measure energy --symmetry su2   # sample energy expectation value
 ```
 

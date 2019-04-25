@@ -1,6 +1,7 @@
 push!(LOAD_PATH, abspath("src"))
-using Yao, Yao.Blocks
+using Yao
 using LinearAlgebra, Statistics
+using BitBasis: packbits
 using QMPS
 using Test, Random
 
@@ -43,20 +44,38 @@ end
 end
 
 @testset "energy-goodqn" begin
-    Random.seed!(5)
+    Random.seed!(2)
     for hei in [Heisenberg(10; periodic=false), Heisenberg(3, 3; periodic=false), J1J2(3,3; J2=0.5, periodic=false)]
         nbit = nspin(hei)
         for xmodel in [:u1, :su2]
+            @show xmodel
             pairs = pair_ring(xmodel==:su2 ? 4 : 5)
             chem = model(:general; nbit=nbit, B=10000, V=4, pairs=pairs)
             println("Number of parameters is ", chem.circuit |> nparameters)
             circuit = chem2circuit(chem)
             eng = energy(chem, hei)
             hami = hamiltonian(hei)
-            eng_exact = expect(hami, product_state(nbit, chem.input_state |> Yao.Intrinsics.packbits) |> circuit) |> real
+            eng_exact = expect(hami, product_state(nbit, chem.input_state |> packbits) |> circuit) |> real
             @test isapprox(eng, eng_exact, rtol=0.3)
         end
     end
 end
 
-
+@testset "energy-goodqn tfi" begin
+    Random.seed!(11)
+    for hei in [TFI(2; h=0.5, periodic=false)]
+        nbit = nspin(hei)
+        for xmodel in [:twoqubit]
+            @show xmodel
+            chem = model(xmodel; nbit=nbit, B=10000)
+            println("Number of parameters is ", chem.circuit |> nparameters)
+            circuit = chem2circuit(chem)
+            eng = energy(chem, hei)
+            hami = hamiltonian(hei)
+            @show circuit
+            eng_exact = expect(hami, product_state(nbit, chem.input_state |> packbits) |> circuit) |> real
+            @show eng, eng_exact
+            @test isapprox(eng, eng_exact, rtol=0.3)
+        end
+    end
+end

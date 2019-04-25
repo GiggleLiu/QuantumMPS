@@ -8,6 +8,6 @@ end
 function model(::Val{:cluster}; nbit, B=4096)
     nrepeat = nbit - 1
     c = cluster_circuit(nrepeat)
-    chem = QuantumMPS(1, 1, 0, c, zero_state(2, B), zeros(Int, nbit))
+    chem = QuantumMPS(1, 1, 0, c, zero_state(2, nbatch=B), zeros(Int, nbit))
     chem
 end

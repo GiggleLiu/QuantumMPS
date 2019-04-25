@@ -50,10 +50,10 @@ function _measure!(reg::AbstractRegister{B, T}, i, sl, input_state, reset) where
     for si in sl
         if i==si.first
             op_i = eigen!(si.second |> mat |>Matrix)
-            reg |> put(nqubits(reg), 1=>matrixgate(T.(op_i.vectors' |> Matrix)))
-            return @inbounds 1 .- 2 .* (reset ? measure_reset!(reg, 1, val=input_state[i+1]) : measure_remove!(reg, 1))
+            reg |> put(nqubits(reg), 1=>matblock(T.(op_i.vectors' |> Matrix)))
+            return @inbounds 1 .- 2 .* (reset ? measure_collapseto!(reg, 1; config=input_state[i+1]) : measure_remove!(reg, 1))
         end
     end
-    reset ? measure_reset!(reg, 1, val=input_state[i+1]) : measure_remove!(reg, 1)
+    reset ? measure_collapseto!(reg, 1; config=input_state[i+1]) : measure_collapseto!(reg, 1)
     nothing
 end

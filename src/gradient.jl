@@ -6,10 +6,9 @@ struct QMPSOptimizer
     optimizer
     diff_blocks
     params::Vector
-    QMPSOptimizer(chem::QuantumMPS, model::AbstractModel, optimizer) = new(chem, model, optimizer, collect(chem.circuit, AbstractDiff), parameters(chem.circuit))
+    QMPSOptimizer(chem::QuantumMPS, model::AbstractModel, optimizer) = new(chem, model, optimizer, collect_blocks(AbstractDiff, chem.circuit), parameters(chem.circuit))
 end
 
-import Yao: gradient
 # TODO: setiparameters! throw number of parameters mismatch error!
 function gradient(chem::QuantumMPS, db::AbstractDiff, model::AbstractModel)
     db.block.theta += π/2
@@ -33,7 +32,7 @@ function gradients_exact(chem, hami; dbs=nothing)
     nbit = nbit_simulated(chem)
     circuit = chem2circuit(chem)
     if dbs == nothing
-        dbs = collect(circuit, AbstractDiff)
+        dbs = collect_blocks(AbstractDiff, circuit)
     end
     opdiff.(()->state_exact(chem), dbs, Ref(hami))
 end
