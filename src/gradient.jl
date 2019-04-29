@@ -30,7 +30,7 @@ end
 
 function gradients_exact(chem, hami; dbs=nothing)
     nbit = nbit_simulated(chem)
-    circuit = chem2circuit(chem)
+    circuit = expand_circuit(chem)
     if dbs == nothing
         dbs = collect_blocks(AbstractDiff, circuit)
     end

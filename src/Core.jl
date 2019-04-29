@@ -1,4 +1,4 @@
-export getblock, nbit_used, nbit_simulated, nrepeat, chem2circuit, QuantumMPS
+export getblock, nbit_used, nbit_simulated, nrepeat, expand_circuit, QuantumMPS
 export state_exact, fidelity_exact
 export gensample
 
@@ -29,7 +29,7 @@ nbit_used(chem::QuantumMPS) = nqubits(chem.circuit[1])
 nbit_simulated(chem::QuantumMPS) = chem.nbit_measure*nrepeat(chem) + chem.nbit_virtual
 
 """convert a chem circuit to a circuit with no reuse"""
-function chem2circuit(tnchem)
+function expand_circuit(tnchem)
     nbit = nbit_simulated(tnchem) + tnchem.nbit_ancilla
     nm = tnchem.nbit_measure
     nv = tnchem.nbit_virtual + tnchem.nbit_ancilla
@@ -41,7 +41,7 @@ function chem2circuit(tnchem)
 end
 
 function state_exact(chem::QuantumMPS)
-    circuit = chem2circuit(chem)
+    circuit = expand_circuit(chem)
     if chem.nbit_ancilla == 0
         return product_state(nqubits(circuit), chem.input_state|>packbits) |> circuit
     else

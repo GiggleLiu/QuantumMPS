@@ -73,7 +73,7 @@ end
 using Test, Random
 
 nbit_simulated(qmps) = length(collect_blocks(Measure, qmps))
-function chem2circuit(circuit)
+function expand_circuit(circuit)
     nbit = nbit_simulated(circuit)
     nm = 1
     nv = 1
@@ -117,7 +117,7 @@ train(circuit, model; α=0.5)
     nbit = hei.length
     circuit = twoqubit_circuit(2, nbit-1)
     println("Number of parameters is ", circuit|> nparameters)
-    bigc = chem2circuit(circuit)
+    bigc = expand_circuit(circuit)
     eng = energy(circuit, hei; nbatch=10000)
     hami = hamiltonian(hei)
     @show bigc

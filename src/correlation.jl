@@ -54,6 +54,6 @@ function _measure!(reg::AbstractRegister{B, T}, i, sl, input_state, reset) where
             return @inbounds 1 .- 2 .* (reset ? measure_collapseto!(reg, 1; config=input_state[i+1]) : measure_remove!(reg, 1))
         end
     end
-    reset ? measure_collapseto!(reg, 1; config=input_state[i+1]) : measure_collapseto!(reg, 1)
+    reset ? measure_collapseto!(reg, 1; config=input_state[i+1]) : measure_remove!(reg, 1)
     nothing
 end
