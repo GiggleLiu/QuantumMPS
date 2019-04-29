@@ -17,25 +17,6 @@ function energy_exact(tc::QuantumMPS, model::AbstractModel)
 end
 
 """
-    energy(chem::QuantumMPS, model::AbstractHeisenberg) -> Float64
-
-Ground state energy by sampling Quantum MPS.
-The hamiltonian is limited to Heisenberg and J1J2 Type.
-"""
-function energy(chem::QuantumMPS, model::AbstractHeisenberg)
-    energy(chem, X, model) + energy(chem, Y, model) + energy(chem, Z, model)
-end
-
-function energy(chem::QuantumMPS, pauli::PauliGate, model::AbstractHeisenberg)
-    res = gensample(chem, pauli)
-    local eng = 0.0
-    for bond in get_bonds(model)
-        eng += bond[3]*mean(res[:,bond[1]].*res[:,bond[2]])
-    end
-    eng/4
-end
-
-"""
     ground_state(model::AbstractModel) -> DefaultRegister
 
 Get the exact ground state of a model.
@@ -56,3 +37,4 @@ function get_bonds end
 
 include("Heisenberg.jl")
 include("J1J2.jl")
+include("TFI.jl")

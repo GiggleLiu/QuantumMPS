@@ -1,4 +1,4 @@
-export getblock, nbit_used, nbit_simulated, nrepeat, chem2circuit, QuantumMPS
+export getblock, nbit_used, nbit_simulated, nrepeat, expand_circuit, QuantumMPS
 export state_exact, fidelity_exact
 export gensample
 
@@ -29,7 +29,7 @@ nbit_used(chem::QuantumMPS) = nqubits(chem.circuit[1])
 nbit_simulated(chem::QuantumMPS) = chem.nbit_measure*nrepeat(chem) + chem.nbit_virtual
 
 """convert a chem circuit to a circuit with no reuse"""
-function chem2circuit(tnchem)
+function expand_circuit(tnchem)
     nbit = nbit_simulated(tnchem) + tnchem.nbit_ancilla
     nm = tnchem.nbit_measure
     nv = tnchem.nbit_virtual + tnchem.nbit_ancilla
@@ -41,12 +41,12 @@ function chem2circuit(tnchem)
 end
 
 function state_exact(chem::QuantumMPS)
-    circuit = chem2circuit(chem)
+    circuit = expand_circuit(chem)
     if chem.nbit_ancilla == 0
-        return product_state(nqubits(circuit), chem.input_state|>Yao.Intrinsics.packbits) |> circuit
+        return product_state(nqubits(circuit), chem.input_state|>packbits) |> circuit
     else
         nbit = nqubits(circuit)
-        product_state(nbit, chem.input_state|>Yao.Intrinsics.packbits) |> circuit |> focus!((1:nbit-chem.nbit_ancilla)...) |> remove_env!
+        product_state(nbit, chem.input_state|>packbits) |> circuit |> focus!((1:nbit-chem.nbit_ancilla)...) |> remove_env!
     end
 end
 
@@ -67,7 +67,8 @@ function gensample(chem::QuantumMPS, pauli::PauliGate)
     T = datatype(chem.initial_reg)
 
     op = eigen!(pauli |> mat |>Matrix)
-    rotor = put(nv+1, 1=>matrixgate(T.(op.vectors' |> Matrix)))
+    G = matblock(T.(op.vectors' |> Matrix))
+    rotor = put(nv+1, 1=>G)
     local res = similar(reg |> state, Int, nbatch(reg), nbit_simulated(chem))
     for i = nrep+1:nrep+nv
         input_state[i] == 1 && apply!(reg, put(nv+1, (i-nrep+1)=>X))
@@ -77,14 +78,12 @@ function gensample(chem::QuantumMPS, pauli::PauliGate)
         reg |> getblock(chem, i)
         if i!=nrep
             reg |> rotor
-            @inbounds res[:,i] = 1 .- 2 .* measure_reset!(reg, 1, val=input_state[i+1])
+            @inbounds res[:,i] = 2 .* measure_collapseto!(reg, 1; config=input_state[i+1]) .- 1
         end
     end
     for i=1:nv+1-chem.nbit_ancilla
-        reg |> rotor
-        @inbounds res[:,i+nrep-1] = 1 .- 2 .* measure_remove!(reg, 1)
+        reg |> put(nqubits(reg), 1=>G)
+        @inbounds res[:,i+nrep-1] = 2 .* measure_remove!(reg, 1) .- 1
     end
     res
 end
-
-

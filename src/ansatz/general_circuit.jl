@@ -1,4 +1,4 @@
-using Yao, Yao.Blocks
+using Yao
 
 export random_circuit, pair_ring
 
@@ -39,8 +39,8 @@ ref:
        https://doi.org/10.1038/nature23879.
 """
 function random_circuit(nbit_measure::Int, nbit_virtual::Int, nlayer::Int, nrepeat::Int, entangler_pairs)
-    circuit = sequence()
     nbit_used = nbit_measure + nbit_virtual
+    circuit = chain(nbit_used)
     entangler = cnot_entangler(nbit_used, entangler_pairs)
 
     for i=1:nrepeat
@@ -56,6 +56,6 @@ end
 
 function model(::Val{:general}; nbit::Int, V::Int, B::Int=4096, nlayer::Int=5, pairs)
     c = random_circuit(1, V, nlayer, nbit-V, pairs) |> autodiff(:QC)
-    chem = QuantumMPS(1, V, 0, c, zero_state(V+1, B), zeros(Int, nbit))
+    chem = QuantumMPS(1, V, 0, c, zero_state(V+1, nbatch=B), zeros(Int, nbit))
     chem
 end
