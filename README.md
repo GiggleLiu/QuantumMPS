@@ -1,9 +1,7 @@
 # QuantumMPS
-Matrix product state (MPS) inspired quantum circuits ansatz for variational quantum eigensolver (VQE).
+To make life easier, [here](https://giggleliu.github.io/TwoQubit-VQE.html) is a simplified notebook version of qubit saving scheme for VQE.
 
-Physical Hamiltonian includes: 1D and 2D Heisenberg model, with or without frustration, OBC or PBC.
-
-Circuit Block includes: General, U(1) and SU(2) symmetric ansatz.
+Matrix product state (MPS) inspired quantum circuits ansatz for variational quantum eigensolver (VQE). Physical Hamiltonian includes: 1D and 2D Heisenberg model, with or without frustration, OBC or PBC. Circuit Block includes: General, U(1) and SU(2) symmetric ansatz.
 
 ## Setup Guide
 
