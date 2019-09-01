@@ -5,6 +5,8 @@ Matrix product state (MPS) inspired quantum circuits ansatz for variational quan
 
 ## Setup Guide
 
+**Warning: This package is not maintained anymore! It has been migrated to [QuantumPEPS](https://github.com/GiggleLiu/QuantumPEPS.jl)**
+
 Clone this repository [https://github.com/GiggleLiu/QuantumMPS.git](https://github.com/GiggleLiu/QuantumMPS.git) to your local host.
 
 Set up your julia environment
